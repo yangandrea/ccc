@@ -1,0 +1,90 @@
+/**
+ * @name PurplePrune_RedVoice_Fix
+ * @author computer-catt & Benzeel
+ * @description Transparent theme with Forced RED Voice Indicators
+ * @version 1.4.0
+ */
+
+/* 1. CONFIG & COLORS */
+:root, .theme-dark {
+    --window-tint: #0005;
+    --theme-background-image: url(https://github.com/computer-catt/PurplePrune/blob/main/Assets/NightTheme.webp?raw=true);
+    --enable-blur: 1; 
+    --blur-strength: 4px;
+    --tm-enable: 1; 
+    --tm-blur: 10px;
+    
+    /* VOICE COLOR CHANGED TO RED */
+    --speaking-color: #ff0000; 
+
+    /* Transparency Core */
+    --app-frame-background: transparent !important;
+    --background-base-lowest: transparent !important;
+    --background-base-low: rgba(0,0,0,0.3) !important;
+    --chat-background-default: transparent !important;
+    --background-surface-high: rgba(0,0,0,0.4) !important;
+    --__header-bar-background: transparent !important;
+}
+
+/* 2. GLOBAL BACKGROUNDS */
+html {background: var(--theme-background-image); background-size: cover; background-attachment: fixed;}
+body { background: var(--window-tint) !important; }
+.root_bfe55a, .callContainer_cb9592, [class*="container_e9ef78"] {background: none !important;}
+
+/* 3. --- FORCED RED VOICE CIRCLES --- */
+
+/* Circle on Avatar (Sidebar and Grid) */
+[class*="avatarSpeaking"], 
+[data-is-speaking="true"] [class*="avatar-"] {
+    box-shadow: 0 0 0 3px var(--speaking-color), 0 0 15px var(--speaking-color) !important;
+    outline: 2px solid var(--speaking-color) !important;
+    border-radius: 50% !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 100000 !important; /* Above everything */
+}
+
+/* Grid Border of the speaking person */
+[class*="border"][class*="speaking"],
+[class*="tile_"][class*="speaking"] {
+    border: 3px solid var(--speaking-color) !important;
+    box-shadow: inset 0 0 15px var(--speaking-color), 0 0 15px var(--speaking-color) !important;
+    opacity: 1 !important;
+    z-index: 100000 !important;
+}
+
+/* 4. TRANSPARENT MESSAGEBOX LOGIC (Benzeel/Computer-Cat) */
+@container style(--tm-enable: 1) {
+  form[class*="form_"] {margin-top: -51vh; z-index: 5;} 
+  div[class*="messagesWrapper_"] > div[class*="jumpToPresentBar_"] {bottom: 52vh;}
+  
+  div[class*="messagesWrapper_"] > form, 
+  div[class*="autocomplete_"], 
+  div[class*="channelTextArea_"]::before {
+    backdrop-filter: blur(var(--tm-blur));
+  }
+
+  div[class*="channelTextArea_"] {
+    position: relative;
+    background: none !important;
+    &::before { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+    > * {position: relative; background: none !important;}
+    > * {background: 0 0 !important;}
+  }
+
+  [class*="chat_"] { overflow: visible !important; } 
+  ol[class*="scrollerInner_"]::after {
+    display: block; content: ""; position: relative; height: 50vh;
+  }
+}
+
+/* 5. UI ELEMENTS & BLUR FIXES */
+.user-profile-popout { border-radius: 32px; background: rgba(0,0,0,0.4) !important; }
+.sidebarListRounded__5e434 { background: none !important; backdrop-filter: none !important; }
+
+@container style(--enable-blur: 1) {
+    [class*="contentWrapper_"], [class*="userProfilePopout_"], [class*="tooltip_"], [class*="menu_"] {
+        backdrop-filter: blur(var(--blur-strength));
+    }
+}
